@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Client Inventory Form</title>
+    <style>
+      body {
+        font-family: "Inter", sans-serif;
+        background: #f5f7fa;
+        padding: 2rem;
+        display: flex;
+        justify-content: center;
+      }
+      .form-container {
+        background: white;
+        padding: 2rem;
+        border-radius: 12px;
+        box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+        width: 100%;
+        max-width: 500px;
+      }
+      h2 {
+        text-align: center;
+      }
+      label {
+        display: block;
+        margin-top: 1rem;
+        font-weight: bold;
+      }
+      input,
+      select,
+      textarea,
+      button {
+        width: 100%;
+        margin-top: 0.5rem;
+        padding: 0.8rem;
+        border-radius: 8px;
+        border: 1px solid #ccc;
+        font-size: 1rem;
+      }
+      button {
+        margin-top: 1.5rem;
+        background: #007bff;
+        color: white;
+        border: none;
+        font-weight: bold;
+      }
+      .notification {
+        margin-top: 1rem;
+        display: none;
+        background: #d4edda;
+        padding: 1rem;
+        border-radius: 8px;
+        color: #155724;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="form-container">
+      <h2>Inventory Form</h2>
+      <form id="inventoryForm">
+        <label for="storeName">Store Name</label>
+        <input type="text" id="storeName" required />
+
+        <label for="employeeName">Employee Name</label>
+        <input type="text" id="employeeName" required />
+
+        <label for="productName">Product Name</label>
+        <select id="productName" required>
+          <option value="">Select a product</option>
+          <option value="Product A">Product A</option>
+          <option value="Product B">Product B</option>
+          <option value="Product C">Product C</option>
+        </select>
+
+        <label for="productQuantity">Product Quantity</label>
+        <input type="number" id="productQuantity" required min="1" />
+
+        <label for="notes">Notes (Return items if any)</label>
+        <textarea id="notes" rows="4"></textarea>
+
+        <button type="submit">Submit</button>
+      </form>
+
+      <div class="notification" id="notification">
+        ✅ Inventory for <strong>Sheelkamal Distributor</strong> is received.
+        Order is being prepared.<br />
+        Thank you for your trust!
+      </div>
+    </div>
+
+    <script>
+      const form = document.getElementById("inventoryForm");
+      form.addEventListener("submit", async function (e) {
+        e.preventDefault();
+
+        const data = new URLSearchParams();
+        data.append("storeName", document.getElementById("storeName").value);
+        data.append(
+          "employeeName",
+          document.getElementById("employeeName").value
+        );
+        data.append(
+          "productName",
+          document.getElementById("productName").value
+        );
+        data.append(
+          "productQuantity",
+          document.getElementById("productQuantity").value
+        );
+        data.append("notes", document.getElementById("notes").value);
+
+        try {
+          const response = await fetch(
+            "https://script.google.com/macros/s/AKfycbyrbFLeK9htz2b8BX1ZIJGjJFAUT5rZu_3_HAbrpKfl_tiu-US3HgamGqu0gaNbLQ0CNg/exec",
+            {
+              method: "POST",
+              body: data,
+            }
+          );
+
+          const result = await response.text();
+          console.log("Success:", result);
+
+          document.getElementById("notification").style.display = "block";
+          form.reset();
+        } catch (err) {
+          console.error("Error:", err);
+        }
+      });
+    </script>
+  </body>
+</html>
